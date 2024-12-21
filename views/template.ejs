@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bill Template</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        width: 100%;
+        margin: 0;
+        /* padding: 10px; */
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .header p {
+        margin: 0;
+        font-size: 12px;
+      }
+      .time {
+        text-align: left;
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+      }
+      th,
+      td {
+        border-bottom: 1px solid #ddd;
+        padding: 5px;
+        text-align: center;
+        font-size: 12px;
+      }
+      th {
+        font-weight: bold;
+        text-align: center;
+      }
+      .item-note {
+        font-size: 10px;
+      }
+      p {
+        margin: 0;
+      }
+      .item-column {
+        text-align: left;
+        width: 50%;
+        vertical-align: top;
+      }
+      .right-column {
+        width: 16.67%;
+        vertical-align: top;
+      }
+      .total {
+        text-align: right;
+        margin-top: 20px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Lewa Gourmet</h1>
+      <p><%= table.name %></p>
+      <p>98A Le Lai, Pham Ngu Lao, District 1, HCMC</p>
+      <p>(+84) 0916 38 83 82</p>
+    </div>
+    <div class="time">
+      <p>
+        <%= new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit',
+        year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false
+        }).format(new Date()) %>
+      </p>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th class="item-column">Item</th>
+          <th class="right-column">Price</th>
+          <th class="right-column">Qty</th>
+          <th class="right-column">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(order => { %>
+        <tr>
+          <td class="item-column">
+            <p><%= order.name %></p>
+            <p class="item-note">
+              <%= order.sugarLevel ? `${SUGAR_LEVEL.find((sugar) => sugar.value
+              === order.sugarLevel).label}` : "" %> &nbsp; &nbsp; <%=
+              order.iceLevel ? `${ICE_LEVEL.find((ice) => ice.value ===
+              order.iceLevel).label}` : "" %>
+            </p>
+          </td>
+          <td class="right-column"><%= formatPrice(order.price) %></td>
+          <td class="right-column"><%= order.quantity %></td>
+          <td class="right-column">
+            <%= formatPrice(order.price * order.quantity) %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <div class="total">
+      Grand Total: <%= formatPrice(orders.reduce((sum, order) => sum +
+      (order.price * order.quantity), 0)) %>
+    </div>
+  </body>
+</html>
