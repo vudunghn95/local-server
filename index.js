@@ -7,15 +7,15 @@ const {
 } = require("node-thermal-printer");
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
-const puppeteer = require("puppeteer");
+// const path = require("path");
+// const puppeteer = require("puppeteer");
 
 const app = express();
 const port = 3003;
 
 // Set EJS as the templating engine
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+// app.set("view engine", "ejs");
+// app.set("views", path.join(__dirname, "views"));
 
 // Middleware to parse JSON requests
 app.use(express.json());
@@ -91,46 +91,47 @@ app.post("/print", async (req, res) => {
   }
 
   try {
-    const html = await new Promise((resolve, reject) => {
-      app.render(
-        "template",
-        { orders: data, table, formatPrice, SUGAR_LEVEL, ICE_LEVEL },
-        (err, html) => {
-          if (err) {
-            console.error("Render error:", err);
-            return reject("Template rendering failed.");
-          }
-          resolve(html);
-        }
-      );
-    });
+    // const html = await new Promise((resolve, reject) => {
+    //   app.render(
+    //     "template",
+    //     { orders: data, table, formatPrice, SUGAR_LEVEL, ICE_LEVEL },
+    //     (err, html) => {
+    //       if (err) {
+    //         console.error("Render error:", err);
+    //         return reject("Template rendering failed.");
+    //       }
+    //       resolve(html);
+    //     }
+    //   );
+    // });
 
-    // Convert HTML to PDF buffer using Puppeteer
-    const browser = await puppeteer.launch({ defaultViewport: null });
-    const page = await browser.newPage();
+    // // Convert HTML to PDF buffer using Puppeteer
+    // const browser = await puppeteer.launch({ defaultViewport: null });
+    // const page = await browser.newPage();
 
-    // Set the initial viewport size
+    // // Set the initial viewport size
 
-    await page.setContent(html);
+    // await page.setContent(html);
 
-    // Adjust the viewport size to fit the content
+    // // Adjust the viewport size to fit the content
 
-    // Optionally, you can set the scale to ensure the content fits well
-    await page.evaluate(() => {
-      document.body.style.zoom = "1.8"; // Adjust zoom level as needed
-    });
-    let contentHeight = await page.evaluate(() => document.body.scrollHeight);
+    // // Optionally, you can set the scale to ensure the content fits well
+    // await page.evaluate(() => {
+    //   document.body.style.zoom = "1.8"; // Adjust zoom level as needed
+    // });
+    // let contentHeight = await page.evaluate(() => document.body.scrollHeight);
 
-    await page.setViewport({ width: 540, height: contentHeight });
-    // Capture a screenshot of the page
-    const imageBuffer = await page.screenshot({
-      fullPage: true,
-      encoding: "binary",
-    });
-    await browser.close();
+    // await page.setViewport({ width: 540, height: contentHeight });
+    // // Capture a screenshot of the page
+    // const imageBuffer = await page.screenshot({
+    //   fullPage: true,
+    //   encoding: "binary",
+    // });
+    // await browser.close();
 
     // Send the buffer to the printer
-    printer.printImageBuffer(Buffer.from(imageBuffer, "binary"));
+    // printer.printImageBuffer(Buffer.from(imageBuffer, "binary"));
+    printer.print("Hello World");
     printer.cut();
     await printer.execute();
     printer.clear();
